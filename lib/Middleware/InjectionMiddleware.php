@@ -28,10 +28,12 @@ use OCA\Spreed\Controller\EnvironmentAwareTrait;
 use OCA\Spreed\Exceptions\ParticipantNotFoundException;
 use OCA\Spreed\Exceptions\RoomNotFoundException;
 use OCA\Spreed\Manager;
+use OCA\Spreed\Middleware\Exceptions\LobbyException;
 use OCA\Spreed\Middleware\Exceptions\NotAModeratorException;
 use OCA\Spreed\Middleware\Exceptions\ReadOnlyException;
 use OCA\Spreed\Room;
 use OCA\Spreed\TalkSession;
+use OCA\Spreed\Webinary;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
@@ -74,6 +76,7 @@ class InjectionMiddleware extends Middleware {
 	 * @throws ParticipantNotFoundException
 	 * @throws NotAModeratorException
 	 * @throws ReadOnlyException
+	 * @throws LobbyException
 	 */
 	public function beforeController($controller, $methodName): void {
 		if (!$controller instanceof AEnvironmentAwareController) {
@@ -98,6 +101,10 @@ class InjectionMiddleware extends Middleware {
 
 		if ($this->reflector->hasAnnotation('RequireReadWriteConversation')) {
 			$this->checkReadOnlyState($controller);
+		}
+
+		if ($this->reflector->hasAnnotation('RequireModeratorOrNoLobby')) {
+			$this->checkLobbyState($controller);
 		}
 	}
 
@@ -154,6 +161,22 @@ class InjectionMiddleware extends Middleware {
 	}
 
 	/**
+	 * @param AEnvironmentAwareController $controller
+	 * @throws LobbyException
+	 */
+	protected function checkLobbyState(AEnvironmentAwareController $controller): void {
+		try {
+			$this->getLoggedInOrGuest($controller, true);
+		} catch (NotAModeratorException $e) {
+			$room = $controller->getRoom();
+			if (!$room instanceof Room || $room->getLobbyState() === Webinary::ALL_PARTICIPANTS) {
+				throw new LobbyException();
+			}
+		}
+
+	}
+
+	/**
 	 * @param Controller $controller
 	 * @param string $methodName
 	 * @param \Exception $exception
@@ -171,7 +194,8 @@ class InjectionMiddleware extends Middleware {
 		}
 
 		if ($exception instanceof NotAModeratorException ||
-			$exception instanceof ReadOnlyException) {
+			$exception instanceof ReadOnlyException ||
+			$exception instanceof LobbyException) {
 			if ($controller instanceof OCSController) {
 				throw new OCSException('', Http::STATUS_FORBIDDEN);
 			}
