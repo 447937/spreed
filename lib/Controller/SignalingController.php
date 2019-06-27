@@ -32,6 +32,7 @@ use OCA\Spreed\Participant;
 use OCA\Spreed\Room;
 use OCA\Spreed\Signaling\Messages;
 use OCA\Spreed\TalkSession;
+use OCA\Spreed\Webinary;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
@@ -163,10 +164,18 @@ class SignalingController extends OCSController {
 			}
 
 			$room = $this->manager->getRoomForSession($this->userId, $sessionId);
+			$participant = $room->getParticipantBySession($sessionId);
+
+			if (!$participant->hasModeratorPermissions() &&
+				$room->getLobbyState() !== Webinary::ALL_PARTICIPANTS) {
+				throw new RoomNotFoundException('Lobby enabled');
+			}
 
 			$pingTimestamp = $this->timeFactory->getTime();
 			$room->ping($this->userId, $sessionId, $pingTimestamp);
 		} catch (RoomNotFoundException $e) {
+			return new DataResponse([['type' => 'usersInRoom', 'data' => []]], Http::STATUS_NOT_FOUND);
+		} catch (ParticipantNotFoundException $e) {
 			return new DataResponse([['type' => 'usersInRoom', 'data' => []]], Http::STATUS_NOT_FOUND);
 		}
 

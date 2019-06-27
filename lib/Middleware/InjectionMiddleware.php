@@ -116,37 +116,39 @@ class InjectionMiddleware extends Middleware {
 	protected function getLoggedIn(AEnvironmentAwareController $controller, bool $moderatorRequired): void {
 		$token = $this->request->getParam('token');
 		$room = $this->manager->getRoomForParticipantByToken($token, $this->userId);
+		$controller->setRoom($room);
+
 		$participant = $room->getParticipant($this->userId);
+		$controller->setParticipant($participant);
 
 		if ($moderatorRequired && !$participant->hasModeratorPermissions(false)) {
 			throw new NotAModeratorException();
 		}
 
-		$controller->setRoom($room);
-		$controller->setParticipant($participant);
 	}
 
 	/**
 	 * @param AEnvironmentAwareController $controller
 	 * @param bool $moderatorRequired
 	 * @throws NotAModeratorException
+	 * @throws ParticipantNotFoundException
 	 */
 	protected function getLoggedInOrGuest(AEnvironmentAwareController $controller, bool $moderatorRequired): void {
 		$token = $this->request->getParam('token');
 		$room = $this->manager->getRoomForParticipantByToken($token, $this->userId);
+		$controller->setRoom($room);
+
 		if ($this->userId !== null) {
 			$participant = $room->getParticipant($this->userId);
 		} else {
 			$sessionId = $this->talkSession->getSessionForRoom($token);
 			$participant = $room->getParticipantBySession($sessionId);
 		}
+		$controller->setParticipant($participant);
 
 		if ($moderatorRequired && !$participant->hasModeratorPermissions()) {
 			throw new NotAModeratorException();
 		}
-
-		$controller->setRoom($room);
-		$controller->setParticipant($participant);
 	}
 
 	/**
@@ -167,13 +169,15 @@ class InjectionMiddleware extends Middleware {
 	protected function checkLobbyState(AEnvironmentAwareController $controller): void {
 		try {
 			$this->getLoggedInOrGuest($controller, true);
+			return;
 		} catch (NotAModeratorException $e) {
-			$room = $controller->getRoom();
-			if (!$room instanceof Room || $room->getLobbyState() === Webinary::ALL_PARTICIPANTS) {
-				throw new LobbyException();
-			}
+		} catch (ParticipantNotFoundException $e) {
 		}
 
+		$room = $controller->getRoom();
+		if (!$room instanceof Room || $room->getLobbyState() !== Webinary::ALL_PARTICIPANTS) {
+			throw new LobbyException();
+		}
 	}
 
 	/**

@@ -32,6 +32,7 @@ use OCA\Spreed\Manager;
 use OCA\Spreed\Participant;
 use OCA\Spreed\Room;
 use OCA\Spreed\TalkSession;
+use OCA\Spreed\Webinary;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
@@ -226,13 +227,14 @@ class PageController extends Controller {
 			]));
 		}
 
-		$this->talkSession->removePasswordForRoom($token);
 		if ($room->hasPassword()) {
-			$passwordVerification = $room->verifyPassword($password);
+			$password = $password !== '' ? $password : (string) $this->talkSession->getPasswordForRoom($token);
 
+			$passwordVerification = $room->verifyPassword($password);
 			if ($passwordVerification['result']) {
-				$this->talkSession->setPasswordForRoom($token, $token);
+				$this->talkSession->setPasswordForRoom($token, $password);
 			} else {
+				$this->talkSession->removePasswordForRoom($token);
 				if ($passwordVerification['url'] === '') {
 					return new TemplateResponse($this->appName, 'authenticate', [
 						'wrongpw' => $password !== '',
@@ -241,6 +243,11 @@ class PageController extends Controller {
 
 				return new RedirectResponse($passwordVerification['url']);
 			}
+		}
+
+		if ($room->getLobbyState() === Webinary::MODERATORS_ONLY) {
+			$response = new TemplateResponse('spreed', 'lobby', [], 'error');
+			return $response;
 		}
 
 		$params = [
