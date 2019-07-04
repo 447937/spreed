@@ -113,6 +113,11 @@ class Manager {
 			$lastActivity = $this->timeFactory->getDateTime($row['last_activity']);
 		}
 
+		$lobbyTimer = null;
+		if (!empty($row['lobby_timer'])) {
+			$lobbyTimer = $this->timeFactory->getDateTime($row['lobby_timer']);
+		}
+
 		$lastMessage = null;
 		if (!empty($row['comment_id'])) {
 			$lastMessage = $this->commentsManager->getCommentFromData(array_merge($row, [
@@ -144,6 +149,7 @@ class Manager {
 			$activeSince,
 			$lastActivity,
 			$lastMessage,
+			$lobbyTimer,
 			(string) $row['object_type'],
 			(string) $row['object_id']
 		);
