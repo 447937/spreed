@@ -33,6 +33,6 @@ title: Capabilities
 * `locked-one-to-one-rooms` - One-to-one conversations are now locked to the users. Neither guests nor other participants can be added, so the options to do that should be hidden as well. Also a user can only leave a one-to-one conversation (not delete). It will be deleted when the other participant left too. If the other participant posts a new chat message or starts a call, the left-participant will be re-added.
 * `read-only-rooms` - Conversations can be in `read-only` mode which means people can not do calls or write chat messages.
 
-
 ## 7.0
 * `chat-read-marker` - The chat can be optionally marked read by clients manually, independent from the loading of the chat messages.
+* `webinary-lobby` - Group and public conversations can have a lobby. This means only moderators can join the conversation, chat and call. Others can only pull the room endpoint for an update and should join the room as soon as the lobby got disabled.
