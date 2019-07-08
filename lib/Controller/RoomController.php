@@ -144,6 +144,8 @@ class RoomController extends AEnvironmentAwareController {
 			} catch (ParticipantNotFoundException $e) {
 				try {
 					$participant = $room->getParticipantBySession($this->session->getSessionForRoom($token));
+					// Update the ping when the user tries to update a single room, so they are kept active in the lobby.
+					$room->ping($this->userId, $participant->getSessionId(), $this->timeFactory->getTime());
 				} catch (ParticipantNotFoundException $e) {
 				}
 			}
