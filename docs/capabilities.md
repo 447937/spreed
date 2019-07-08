@@ -35,4 +35,4 @@ title: Capabilities
 
 ## 7.0
 * `chat-read-marker` - The chat can be optionally marked read by clients manually, independent from the loading of the chat messages.
-* `webinary-lobby` - Group and public conversations can have a lobby. This means only moderators can join the conversation, chat and call. Others can only pull the room endpoint for an update and should join the room as soon as the lobby got disabled.
+* `webinary-lobby` - See [Webinary management](webinary.md) for technical details.
