@@ -245,11 +245,6 @@ class PageController extends Controller {
 			}
 		}
 
-		if ($room->getLobbyState() === Webinary::MODERATORS_ONLY) {
-			$response = new TemplateResponse('spreed', 'lobby', [], 'error');
-			return $response;
-		}
-
 		$params = [
 			'token' => $token,
 			'signaling-settings' => $this->config->getSettings($this->userId),
