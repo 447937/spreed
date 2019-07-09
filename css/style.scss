@@ -907,6 +907,12 @@ input[type="password"] {
 		}
 	}
 
+	.lobby-warning {
+		.icon {
+			display: inline-block;
+		}
+	}
+
 	.share-link-options {
 		display: flex;
 		align-items: center;
@@ -929,8 +935,14 @@ input[type="password"] {
 				opacity: 1;
 			}
 		}
-		.password-button {
+		.option-button {
 			position: relative;
+
+			div.separator {
+				border-bottom: 1px solid var(--color-border-dark);
+				margin: 0 10px;
+				width: 100%;
+			}
 
 			.menuitem {
 				/* Override rule for menu items from server, as in this case

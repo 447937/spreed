@@ -48,46 +48,51 @@ templates['callinfoview'] = template({"1":function(container,depth0,helpers,part
     + alias4(((helper = (helper = helpers.fileLinkTitle || (depth0 != null ? depth0.fileLinkTitle : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"fileLinkTitle","hash":{},"data":data}) : helper)))
     + "\">\n		<span class=\"icon icon-file\"></span>\n	</a>\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+    return "	<div class=\"lobby-warning\">\n		<span class=\"icon icon-password\"></span>\n		<span>The conversation is locked to moderators at the moment</span>\n	</div>\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "	<div class=\"share-link-options\">\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.canFullModerate : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPublic : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "	</div>\n";
-},"4":function(container,depth0,helpers,partials,data) {
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPublic : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "		<div class=\"option-button\">\n			<span class=\"button icon-more\"></span>\n			<div class=\"popovermenu option-menu bubble menu\">\n				<ul>\n					<li>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.canFullModerate : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "					</li>\n					<li>\n						<span class=\"menuitem "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasPassword : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.program(13, data, 0),"data":data})) != null ? stack1 : "")
+    + " password-option\">\n							"
+    + alias4(((helper = (helper = helpers.passwordInputPlaceholder || (depth0 != null ? depth0.passwordInputPlaceholder : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"passwordInputPlaceholder","hash":{},"data":data}) : helper)))
+    + "\n						</span>\n					</li>\n					<li>\n						<span class=\"menuitem "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasPassword : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.program(13, data, 0),"data":data})) != null ? stack1 : "")
+    + " password-option\">\n							<form class=\"password-form\">\n								<input class=\"password-input\" required maxlength=\"200\" type=\"password\"\n									   placeholder=\""
+    + alias4(((helper = (helper = helpers.passwordInputPlaceholder || (depth0 != null ? depth0.passwordInputPlaceholder : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"passwordInputPlaceholder","hash":{},"data":data}) : helper)))
+    + "\">\n								<input type=\"submit\" value=\"\" autocomplete=\"new-password\" class=\"icon icon-confirm password-confirm\"></input>\n							</form>\n						</span>\n					</li>\n					<li>\n						<div class=\"seperator\"></div>\n					</li>\n					<li>\n						<a href=\"#\" class=\"menuitem action action-lobby-all\">\n							<span class=\"icon icon-link\"></span>\n							<p>\n								<strong class=\"menuitem-text\">All participtans</strong><br>\n								<span class=\"menuitem-text-detail\">Everyone can participant in the chat and join the call</span>\n							</p>\n						</a>\n					</li>\n					<li>\n						<a href=\"#\" class=\"menuitem action action-lobby-moderators\">\n							<span class=\"icon icon-contacts-dark\"></span>\n							<p>\n								<strong class=\"menuitem-text\">Moderators only</strong><br>\n								<span class=\"menuitem-text-detail\">Only moderators can chat and join the call in order to prepare the meeting</span>\n							</p>\n						</a>\n					</li>\n				</ul>\n			</div>\n		</div>\n	</div>\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    return "		<div class=\"clipboard-button\"><span class=\"button icon-clippy\"></span></div>\n";
+},"8":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
-  return "		<input name=\"link-checkbox\" id=\"link-checkbox\" class=\"checkbox link-checkbox\" value=\"1\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPublic : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + " type=\"checkbox\">\n		<label for=\"link-checkbox\" class=\"link-checkbox-label\">"
+  return "							<input name=\"link-checkbox\" id=\"link-checkbox\" class=\"checkbox link-checkbox\" value=\"1\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isPublic : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + " type=\"checkbox\">\n							<label for=\"link-checkbox\" class=\"link-checkbox-label\">"
     + container.escapeExpression(((helper = (helper = helpers.linkCheckboxLabel || (depth0 != null ? depth0.linkCheckboxLabel : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"linkCheckboxLabel","hash":{},"data":data}) : helper)))
     + "</label>\n";
-},"5":function(container,depth0,helpers,partials,data) {
+},"9":function(container,depth0,helpers,partials,data) {
     return " checked=\"checked\"";
-},"7":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return "		<div class=\"clipboard-button\"><span class=\"button icon-clippy\"></span></div>\n		<div class=\"password-button\">\n			<span class=\"button "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasPassword : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
-    + "\"></span>\n			<div class=\"popovermenu password-menu menu-right\">\n				<ul>\n					<li>\n						<span class=\"menuitem "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.hasPassword : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
-    + " password-option\">\n							<form class=\"password-form\">\n								<input class=\"password-input\" required maxlength=\"200\" type=\"password\"\n									placeholder=\""
-    + container.escapeExpression(((helper = (helper = helpers.passwordInputPlaceholder || (depth0 != null ? depth0.passwordInputPlaceholder : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"passwordInputPlaceholder","hash":{},"data":data}) : helper)))
-    + "\">\n								<input type=\"submit\" value=\"\" autocomplete=\"new-password\" class=\"icon icon-confirm password-confirm\"></input>\n							</form>\n						</span>\n					</li>\n				</ul>\n			</div>\n		</div>\n";
-},"8":function(container,depth0,helpers,partials,data) {
+},"11":function(container,depth0,helpers,partials,data) {
     return "icon-password";
-},"10":function(container,depth0,helpers,partials,data) {
+},"13":function(container,depth0,helpers,partials,data) {
     return "icon-no-password";
-},"12":function(container,depth0,helpers,partials,data) {
+},"15":function(container,depth0,helpers,partials,data) {
     return "	<div class=\"share-link-options\">\n		<div class=\"clipboard-button\"><span class=\"button icon-clippy\"></span></div>\n	</div>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div class=\"room-name-container\">\n	<div class=\"room-name\"></div>\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isRoomForFile : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\n<div class=\"call-controls-container\">\n	<div class=\"call-button\"></div>\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.canModerate : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showShareLink : depth0),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.lobbyState : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "<div class=\"call-controls-container\">\n	<div class=\"call-button\"></div>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.canModerate : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.showShareLink : depth0),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n";
 },"useData":true});
 templates['chatview'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {

@@ -53,7 +53,7 @@
 				canFullModerate: this._canFullModerate(),
 				linkCheckboxLabel: t('spreed', 'Share link'),
 				isPublic: this.model.get('type') === 3,
-				passwordInputPlaceholder: this.model.get('hasPassword')? t('spreed', 'Change password'): t('spreed', 'Set password'),
+				passwordInputPlaceholder: this.model.get('hasPassword') ? t('spreed', 'Change password') : t('spreed', 'Set password'),
 				showShareLink: !canModerate && this.model.get('type') === 3,
 				isDeletable: canModerate && (Object.keys(this.model.get('participants')).length > 2 || this.model.get('numGuests') > 0)
 			});
@@ -68,12 +68,14 @@
 
 			'callButton': 'div.call-button',
 
-			'passwordButton': '.password-button .button',
+			'optionButton': '.option-button .button',
+			'optionMenu': '.option-menu',
 			'passwordForm': '.password-form',
-			'passwordMenu': '.password-menu',
 			'passwordOption': '.password-option',
 			'passwordInput': '.password-input',
 			'passwordConfirm': '.password-confirm',
+			'lobbyOpen': '.action-lobby-all',
+			'lobbyModerators': '.action-lobby-moderators',
 
 			'menu': '.password-menu',
 		},
@@ -87,8 +89,10 @@
 			'change @ui.linkCheckbox': 'toggleLinkCheckbox',
 
 			'keyup @ui.passwordInput': 'keyUpPassword',
-			'click @ui.passwordButton': 'showPasswordInput',
+			'click @ui.optionButton': 'showPasswordInput',
 			'click @ui.passwordConfirm': 'confirmPassword',
+			'click @ui.lobbyOpen': 'disableLobby',
+			'click @ui.lobbyModerators': 'enableLobby',
 			'submit @ui.passwordForm': 'confirmPassword',
 		},
 
@@ -102,6 +106,9 @@
 				// User permission change, refresh even when typing, because the
 				// action will fail in the future anyway.
 				this.render();
+			},
+			'change:lobbyState': function() {
+				this.renderWhenInactive();
 			},
 			'change:type': function() {
 				this._updateNameEditability();
@@ -192,20 +199,17 @@
 			});
 			this.initClipboard();
 
-			this.ui.passwordButton.tooltip({
-				placement: 'bottom',
-				trigger: 'hover',
-				title: (this.model.get('hasPassword')) ? t('spreed', 'Change password') : t('spreed', 'Set password')
-			});
+			// this.ui.optionButton.tooltip({
+			// 	placement: 'bottom',
+			// 	trigger: 'hover',
+			// 	title: (this.model.get('hasPassword')) ? t('spreed', 'Change password') : t('spreed', 'Set password')
+			// });
 
 			// Set the body as the container to show the tooltip in front of the
 			// header.
 			this.ui.fileLink.tooltip({container: $('body')});
 
-			var self = this;
-			OC.registerMenu($(this.ui.passwordButton), $(this.ui.passwordMenu), function() {
-				$(self.ui.passwordInput).focus();
-			});
+			OC.registerMenu($(this.ui.optionButton), $(this.ui.optionMenu));
 
 		},
 
@@ -259,6 +263,41 @@
 				type: shareLink ? 'POST' : 'DELETE',
 				success: function() {
 					OCA.SpreedMe.app.signaling.syncRooms();
+				}
+			});
+		},
+
+		/**
+		 * Lobby
+		 */
+		enableLobby: function() {
+			this._setLobby(1, null);
+		},
+
+		setLobbyTimer: function() {
+			// TODO get value from datetime picker
+			var timer = moment().add(1, 'h').toISOString();
+			this._setLobby(1, timer);
+		},
+
+		disableLobby: function() {
+			this._setLobby(0, null);
+		},
+
+		_setLobby: function(state, timer) {
+			$.ajax({
+				url: OC.linkToOCS('apps/spreed/api/v1/room', 2) + this.model.get('token') + '/webinary/lobby',
+				type: 'PUT',
+				data: {
+					state: state,
+					timer: timer
+				},
+				success: function() {
+					OC.hideMenus();
+					OCA.SpreedMe.app.signaling.syncRooms();
+				}.bind(this),
+				error: function() {
+					OC.Notification.show(t('spreed', 'Error occurred while changing lobby state'), {type: 'error'});
 				}
 			});
 		},

@@ -6,33 +6,67 @@
 	</a>
 	{{/if}}
 </div>
+{{#if lobbyState}}
+	<div class="lobby-warning">
+		<span class="icon icon-password"></span>
+		<span>The conversation is locked to moderators at the moment</span>
+	</div>
+{{/if}}
 <div class="call-controls-container">
 	<div class="call-button"></div>
 	{{#if canModerate}}
 	<div class="share-link-options">
-		{{#if canFullModerate}}
-		<input name="link-checkbox" id="link-checkbox" class="checkbox link-checkbox" value="1" {{#if isPublic}} checked="checked"{{/if}} type="checkbox">
-		<label for="link-checkbox" class="link-checkbox-label">{{linkCheckboxLabel}}</label>
-		{{/if}}
 		{{#if isPublic}}
 		<div class="clipboard-button"><span class="button icon-clippy"></span></div>
-		<div class="password-button">
-			<span class="button {{#if hasPassword}}icon-password{{else}}icon-no-password{{/if}}"></span>
-			<div class="popovermenu password-menu menu-right">
+		{{/if}}
+		<div class="option-button">
+			<span class="button icon-more"></span>
+			<div class="popovermenu option-menu bubble menu">
 				<ul>
+					<li>
+						{{#if canFullModerate}}
+							<input name="link-checkbox" id="link-checkbox" class="checkbox link-checkbox" value="1" {{#if isPublic}} checked="checked"{{/if}} type="checkbox">
+							<label for="link-checkbox" class="link-checkbox-label">{{linkCheckboxLabel}}</label>
+						{{/if}}
+					</li>
+					<li>
+						<span class="menuitem {{#if hasPassword}}icon-password{{else}}icon-no-password{{/if}} password-option">
+							{{passwordInputPlaceholder}}
+						</span>
+					</li>
 					<li>
 						<span class="menuitem {{#if hasPassword}}icon-password{{else}}icon-no-password{{/if}} password-option">
 							<form class="password-form">
 								<input class="password-input" required maxlength="200" type="password"
-									placeholder="{{passwordInputPlaceholder}}">
+									   placeholder="{{passwordInputPlaceholder}}">
 								<input type="submit" value="" autocomplete="new-password" class="icon icon-confirm password-confirm"></input>
 							</form>
 						</span>
 					</li>
+					<li>
+						<div class="seperator"></div>
+					</li>
+					<li>
+						<a href="#" class="menuitem action action-lobby-all">
+							<span class="icon icon-link"></span>
+							<p>
+								<strong class="menuitem-text">All participtans</strong><br>
+								<span class="menuitem-text-detail">Everyone can participant in the chat and join the call</span>
+							</p>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="menuitem action action-lobby-moderators">
+							<span class="icon icon-contacts-dark"></span>
+							<p>
+								<strong class="menuitem-text">Moderators only</strong><br>
+								<span class="menuitem-text-detail">Only moderators can chat and join the call in order to prepare the meeting</span>
+							</p>
+						</a>
+					</li>
 				</ul>
 			</div>
 		</div>
-		{{/if}}
 	</div>
 	{{/if}}
 	{{#if showShareLink}}
