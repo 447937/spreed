@@ -1,4 +1,4 @@
-/* global OC, OCA */
+/* global OC, OCA, Hashes */
 
 /**
  * @copyright (c) 2016 Joas Schilling <coding@schilljs.com>
@@ -9,7 +9,7 @@
  * later. See the COPYING file.
  */
 
-(function(OC, OCA) {
+(function(OC, OCA, Hashes) {
 
 	OCA.SpreedMe.Views.RichObjectStringParser = {
 
@@ -58,6 +58,18 @@
 						parameter.isCurrentUser = true;
 					}
 					return this.userLocalTemplate(parameter);
+				case 'guest':
+					if (!this.userLocalTemplate) {
+						this.userLocalTemplate = OCA.Talk.Views.Templates['richobjectstringparser_userlocal'];
+					}
+
+					parameter.isGuest = true;
+					if (!OC.getCurrentUser().uid) {
+						var currentSession = OCA.SpreedMe.app.activeRoom.get('sessionId'),
+							hash = new Hashes.SHA1().hex(currentSession);
+						parameter.isCurrentUser = 'guest/' + hash === parameter.id;
+					}
+					return this.userLocalTemplate(parameter);
 
 				case 'call':
 					if (!this.callTemplate) {
@@ -89,4 +101,4 @@
 
 	};
 
-})(OC, OCA);
+})(OC, OCA, Hashes);
