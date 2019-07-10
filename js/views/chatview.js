@@ -1,4 +1,4 @@
-/* global autosize, Marionette, moment, OC, OCA, OCP */
+/* global OCA, OC, OCP, Marionette, Hashes, autosize, moment */
 
 /**
  *
@@ -21,7 +21,7 @@
  *
  */
 
-(function(OCA, OC, OCP, Marionette, autosize, moment) {
+(function(OCA, OC, OCP, Marionette, Hashes, autosize, moment) {
 	'use strict';
 
 	OCA.SpreedMe = OCA.SpreedMe || {};
@@ -33,6 +33,8 @@
 
 		temporaryNearMessages: 0,
 		sameAuthorMessages: 0,
+
+		sessionHash: '',
 
 		className: 'chat',
 
@@ -82,6 +84,9 @@
 
 		setRoom: function(model) {
 			this.model = model;
+
+			var currentSession = this.model.get('sessionId');
+			this.sessionHash = new Hashes.SHA1().hex(currentSession);
 		},
 
 		_initAutoComplete: function($target) {
@@ -438,7 +443,10 @@
 			formattedMessage = this._plainToRich(formattedMessage);
 			formattedMessage = formattedMessage.replace(/\n/g, '<br/>');
 			formattedMessage = OCA.SpreedMe.Views.RichObjectStringParser.parseMessage(
-				formattedMessage, commentModel.get('messageParameters'));
+				formattedMessage, commentModel.get('messageParameters'), {
+					userId: OC.getCurrentUser().uid,
+					sessionHash: this.sessionHash,
+				});
 
 			var data = _.extend({}, commentModel.attributes, {
 				actorDisplayName: actorDisplayName,
@@ -934,4 +942,4 @@
 
 	OCA.SpreedMe.Views.ChatView = ChatView;
 
-})(OCA, OC, OCP, Marionette, autosize, moment);
+})(OCA, OC, OCP, Marionette, Hashes, autosize, moment);
