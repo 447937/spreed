@@ -52,7 +52,7 @@
 	function SpeakingWhileMutedWarner() {
 		this._handleSpeakingWhileMutedBound = this._handleSpeakingWhileMuted.bind(this);
 		this._handleStoppedSpeakingWhileMutedBound = this._handleStoppedSpeakingWhileMuted.bind(this);
-	};
+	}
 	SpeakingWhileMutedWarner.prototype = {
 
 		setWebRtc: function(webrtc) {
