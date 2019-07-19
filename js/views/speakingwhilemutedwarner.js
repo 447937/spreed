@@ -1,4 +1,4 @@
-/* global OC, OCA */
+/* global OC, OCA, Promise */
 
 /**
  *
